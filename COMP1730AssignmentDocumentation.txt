@@ -1,0 +1,95 @@
+How often do once in a hundred year rainfalls happen?
+Use rainfall data from BoM
+
+Due Thursday 19th October at 5pm 
+
+# /Users/home/Desktop/Comp1730/Rainfall_Queanbeyan_070072.csv
+# /Users/home/Desktop/Comp1730/Rainfall_Canberra_070247.csv
+# /Users/home/Desktop/Comp1730/Rainfall_Sydney_066062.csv
+
+Given a sequence x0, x1, ..., and a frequency threshold F, we want to determine a value
+x_F such that values greater or equal to x_F appear in the sequence, on average, 
+no more than every Fth position in the series. 
+
+Method A:  Find the smallest value xF in X such that for any two values xi and xj in X, 
+if xi >= xF and xj >= xF then abs(j - i) >= F. In other words, any two values that are greater than or equal to xF 
+are at least F steps apart.
+
+Method B: Find the smallest value xF in X such that no more than n / F values in X are greater than or equal to xF. 
+In other words, xF is the (n / F):th largest value in the series.
+- This is the top 1/F quantile of the data. We expect to see values at or above the 1/F quantile every F measurements
+
+Reversing the inequality will provide a threshold such that values less than or equal to x_F appear on average 
+no more than every Fth position in the series. 
+
+Aggregate observations
+    Total for each month - gives a series of monthly values. 
+    Total for a specific month - a series of yearly values
+    Total for a specific year - a series of yearly values. 
+
+Task:
+    Write a program that reads in a data file in the format described above, 
+    calculates a time series (daily, monthly, or for a specific month of the year), 
+    and calculates the threshold value xF for “once in F” using both methods A and B described above.
+
+The user of the program should be able to:
+    Provide a filepath to read a file
+    Select the type of time series aggregation (monthly, yearly etc.)
+    Select whether to compute a threshold for exceptionally low or high values
+    Specify the frequency F
+
+Program output:
+    Computed threshold values, showing which method they came from
+    Dates at which the threshold is exceeded
+
+Sample questions that the program should be able to answer:
+    1. How much is a once in 20 years rainfall for the month of June, at each of the three stations listed above, 
+    and on which years did this occur?
+
+    2. What is the once in a 1000 days amount of rain in a single day, for each of the three stations above, 
+    and on which dates did this happen?
+
+    3. What is the a once in 20 years driest (least rain) year in Queanbeyan, and in which years did this occur?
+
+
+
+
+Individual report: (1 page, 600 words max - PDF or text file) (Do 5 or 6 - probably 5)
+    1. Who were in your group?
+    I worked by myself. 
+
+    2. What parts of the group’s submission (code and documentation) did you write?
+    All of it (skip this question.)
+
+    3. Use your program to answer the first example question above 
+    What is the once in 20 years rainfall for the month of June, and in which years did it happen, 
+    for the Sydney, Canberra and Queanbeyan stations?. Write down the answer.
+    
+    
+
+    4. What is the functional decomposition of your program, at a high level of abstraction? 
+    What are the main functions in the program and what is each of them responsible for? 
+    What are their inputs and outputs?
+
+    5. Select one part of the code that you have written (e.g., a function) 
+    and describe another way it could have been implemented, and why you designed or implemented it the way you did.
+
+    OR
+
+    6. Describe how the user provides inputs to the program, another way this could have been done, 
+    and why you choose that way of user interaction.
+    
+
+Marks (20 total):
+    Code correctness and functionality: 8 marks
+    Code organisation and readibility: 6 marks
+    User experience: 2 marks
+    Report: 4 marks
+
+Things to note:
+- Missing data: cannot assume it is zero
+- If data is present but number of days is missing, it is a single day observation.
+- Gaps: for quantile (method B) threshold, they don’t matter
+	- Whichever way you treat a gap implies an assumption, a risk or a limitation 
+        - understand and document what it is.
+
