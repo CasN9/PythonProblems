@@ -1,6 +1,6 @@
 import bs4
 import requests as req
-import json
+from bokeh.plotting import figure, show, output_file
 # req documentation: http://docs.python-requests.org/en/latest/user/quickstart/
 
 
@@ -61,41 +61,41 @@ def no_dupes_set(list1):
 #    else:
 #        print(story_heading.contents[0].strip())
 
-birthday_dict = {'Caspian Nicholls': '31/5/1998',
-                 'Fergus Orr': '22/10/1998',
-                 'Georgia Ketels': '12/1/1998',
-                 'Cin Cheng': '17/1/1998',
-                 'Renee Aun': '24/2/1998',
-                 'Eliot Vogel': '7/4/1998',
-                 'Tom Crawford': '14/4/1998',
-                 'Amelia Powell': '28/4/1998',
-                 'Alex Williams': '15/5/1998',
-                 'Bec Finocchiaro': '30/5/1998',
-                 'Nina Fujii': '4/6/1998',
-                 'Emily Townsend': '18/6/1998',
-                 'Cameron Pollaers': '25/6/1998',
-                 'Matt Cooke': '3/7/1998',
-                 'Aaqil Zaheed': '5/7/1998',
-                 'Oliver Holt': '7/7/1998',
-                 'Elly Hartnett': '9/7/1998',
-                 'Jess Blakeney': '27/7/1998',
-                 'Amy Kayman': '31/7/1998',
-                 'Kimmy Fernandes-Kemp': '21/12/1997',
-                 'Tim Bliss': '25/12/1997'}
-names = list(birthday_dict.keys())
-print("Welcome to the birthday dictionary. We know the birthdays of: ")
-for i in names:
-    print(i)
-print("Who's birthday would you like to know?")
-user = input()
-print(user + "'s birthday is on %s." % birthday_dict[user])
-file_obj = open("birthdays.txt", 'w+')
-for i in names:
-    file_obj.write(i + ", " + birthday_dict[i] + "\n")
-with open("birthdays.json", "w") as f:
-    json.dump(birthday_dict, f)
-month_total_dict = {}
-with open("birthdays.json", "r") as g:
-    for line in g:
-        print(line)
-        a = line
+file_obj = open("birthdays.txt", 'r')
+names = []
+month_list = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+              'August', 'September', 'October', 'November', 'December']
+dates = []
+for line in file_obj:
+    names.append(line[0:-11].strip(' ').strip(','))
+    dates.append(line[-11:-1].strip(' ').strip(','))
+months = {}
+for i in dates:
+    j = 1
+    while j < 13:
+        if int(i[-7:-5].strip('/')) == j:
+            if month_list[j-1] in months.keys():
+                months[month_list[j-1]] += 1
+                j = 14
+            else:
+                months[month_list[j-1]] = 1
+                j = 14
+        else:
+            j += 1
+
+output_file("plot.html")
+x_list = []
+for i in months.keys():
+    j = 0
+    while j < 12:
+        if month_list[j] == i:
+            x_list.append(j+1)
+            j = 13
+        else:
+            j += 1
+y_list = list(months.values())
+p = figure(title="Number of birthdays of my friends by month")
+p.vbar(x=x_list, top=y_list, width=0.5)
+p.xaxis.axis_label = "Birthday month"
+p.yaxis.axis_label = "Number of birthdays"
+show(p)
